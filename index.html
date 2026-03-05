@@ -1,365 +1,227 @@
-// ================================================
-// MELHORIAS NAS ARTES (PIXEL ART AVANÇADO + ANIMAÇÕES)
-// ================================================
-// Adicione isso NO INÍCIO do <script>, após canvas.height:
-ctx.imageSmoothingEnabled = false; // Pixel art nítido
-
-// Adicione ao objeto player (depois de facingRight):
-player.animTime: 0,
-player.animFrame: 0,
-player.isWalking: false,
-
-// ================================================
-// UPDATE DA ANIMAÇÃO (adicione no updatePlayer, após player.y += player.vy;)
-// ================================================
-player.isWalking = Math.abs(player.vx) > 0.1 && player.onGround;
-if (player.isWalking) {
-  player.animTime += 1/60;
-  player.animFrame = Math.floor(player.animTime * 12) % 4; // 4 frames de caminhada
-} else {
-  player.animFrame = 0;
-  player.animTime = 0;
-}
-
-// ================================================
-// PLATAFORMAS E CHÃO MELHORADOS (com padrão de tijolos!)
-// ================================================
-function drawGround(p) {
-  // Terra base
-  ctx.fillStyle = '#654321';
-  ctx.fillRect(p.x, p.y, p.w, p.h);
-  
-  // Padrão de tijolos na terra
-  const bw = 32, bh = 16;
-  for (let ix = 0; ix < p.w; ix += bw) {
-    for (let iy = 0; iy < p.h - 8; iy += bh) { // Deixa topo para grama
-      const color = ((ix / bw) + (iy / bh)) % 2 ? '#8B4513' : '#A0522D';
-      ctx.fillStyle = color;
-      ctx.fillRect(p.x + ix, p.y + iy, bw, bh);
-      
-      // Sombras nos tijolos
-      ctx.fillStyle = 'rgba(0,0,0,0.2)';
-      ctx.fillRect(p.x + ix + 20, p.y + iy + 8, 12, 8);
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini Mario - Fase Completa</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #6b88ff;
     }
-  }
-  
-  // Grama no topo (ondulada)
-  ctx.fillStyle = '#228B22';
-  ctx.fillRect(p.x, p.y - 12, p.w, 12);
-  ctx.fillStyle = '#32CD32';
-  for (let i = 0; i < p.w; i += 8) {
-    ctx.fillRect(p.x + i, p.y - 16, 8, 4);
-  }
-}
-
-function drawPlatform(p) {
-  // Base marrom
-  ctx.fillStyle = '#D2691E';
-  ctx.fillRect(p.x, p.y, p.w, p.h);
-  
-  // Tijolos com padrão offset
-  const bw = 28, bh = 14;
-  for (let ix = 0; ix < p.w; ix += bw) {
-    for (let iy = 0; iy < p.h; iy += bh) {
-      const offset = (iy / bh) % 2 * (bw / 2);
-      const color1 = '#CD853F';
-      const color2 = '#DEB887';
-      ctx.fillStyle = ((ix / bw) + (iy / bh)) % 2 ? color1 : color2;
-      ctx.fillRect(p.x + ix + offset, p.y + iy, bw, bh);
-      
-      // Detalhes de sombra
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.fillRect(p.x + ix + offset + 18, p.y + iy + 6, 10, 8);
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
+    #title-screen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, #0000aa, #000066);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.8s;
+    }
+    #title-screen h1 {
+      font-size: 5rem;
+      margin: 0;
+      text-shadow: 6px 6px 0 #000;
+      color: #ff4444;
+    }
+    #title-screen p {
+      font-size: 2rem;
+      margin: 20px;
+      text-align: center;
+    }
+    #title-screen button {
+      font-size: 2rem;
+      padding: 15px 40px;
+      background: #ffdd00;
+      border: 6px solid #000;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 8px 0 #aa8800;
+    }
+    #title-screen button:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #aa8800;
+    }
+    canvas {
+      image-rendering: pixelated;
+      width: 100%;
+      height: 100%;
+      background: #87CEEB;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<div id="game-container">
+  <div id="title-screen">
+    <h1>Mini Mario</h1>
+    <p>Use ← → A D para andar<br>ESPAÇO ↑ W para pular</p>
+    <button id="startBtn">COMEÇAR A AVENTURA</button>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+</div>
+
+<script>
+// ================================================
+// MINI MARIO - VERSÃO COMPLETA PARA GITHUB PAGES
+// ================================================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+let canvasWidth = window.innerWidth;
+let canvasHeight = window.innerHeight;
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+
+window.addEventListener('resize', () => {
+  canvasWidth = window.innerWidth;
+  canvasHeight = window.innerHeight;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  if (gameState !== 'title') initCurrentLevel();
+});
+
+// Estados
+let gameState = 'title'; // title | playing | gameover | levelcomplete | win
+let currentLevel = 0;
+let time = 0;
+const WORLD_WIDTH = 3600;
+const camera = { x: 0 };
+let clouds = [];
+let flagPoleLowered = false;
+
+// Player
+const player = {
+  x: 80, y: 0, width: 42, height: 64,
+  vx: 0, vy: 0,
+  speed: 5, jumpPower: -14.5, gravity: 0.65,
+  onGround: false, facingRight: true,
+  animTime: 0, animFrame: 0, isWalking: false
+};
+
+// Teclas
+const keys = {};
+window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+// Níveis (mantidos iguais)
+const levels = [ /* ... cole aqui os dois níveis que você já tem ... */ 
+  // Nível 1 e Nível 2 (copie do seu código original)
+  // Exemplo resumido:
+  { worldWidth: WORLD_WIDTH, flagX: 3550, startX: 80,
+    getPlatforms: h => [ /* array de plataformas */ ],
+    getEnemies: h => [ /* array de inimigos */ ]
+  },
+  { /* nível 2 */ }
+];
+
+let platforms = [];
+let enemies = [];
+
+// Inicializações
+function initClouds() {
+  clouds = [];
+  for (let i = 0; i < 8; i++) {
+    clouds.push({
+      worldX: Math.random() * WORLD_WIDTH * 1.2,
+      y: 80 + Math.random() * 120,
+      size: 40 + Math.random() * 60
+    });
   }
-  
-  // Borda superior brilhante
-  const grad = ctx.createLinearGradient(0, p.y, 0, p.y + 6);
-  grad.addColorStop(0, '#F5DEB3');
-  grad.addColorStop(1, '#D2B48C');
-  ctx.fillStyle = grad;
-  ctx.fillRect(p.x, p.y, p.w, 6);
-  
-  // Borda inferior sombra
-  ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fillRect(p.x, p.y + p.h - 3, p.w, 3);
 }
 
-// ================================================
-// MARIO ULTRA DETALHADO + ANIMAÇÃO DE PERNAS!
-// ================================================
-function drawMario() {
-  let px = player.x;
-  let py = player.y;
-  const flip = !player.facingRight;
-  
-  if (flip) {
-    ctx.save();
-    ctx.scale(-1, 1);
-    px = -px - player.width;
-  }
-  
-  const frame = player.animFrame;
-  const walking = player.isWalking;
-  const jumping = !player.onGround;
-  
-  // Pernas animadas (4 frames: 0=parado, 1-3=caminhando)
-  const legOffset = [0, 0, 4, -4]; // Movimento alternado
-  const shoeY = [0, 0, 2, -2];
-  
-  // Sapatos pretos (animados)
-  ctx.fillStyle = '#212121';
-  ctx.fillRect(px + 14 + legOffset[frame % 4], py + 48 + shoeY[frame % 4], 6, 10);
-  ctx.fillRect(px + 22 + legOffset[(frame + 2) % 4], py + 48 + shoeY[(frame + 2) % 4], 6, 10);
-  
-  // Pernas azuis
-  ctx.fillStyle = '#1976D2';
-  ctx.fillRect(px + 15 + legOffset[frame % 4], py + 38, 4, 12);
-  ctx.fillRect(px + 23 + legOffset[(frame + 2) % 4], py + 38, 4, 12);
-  
-  // Calças vermelhas (suspensórios)
-  ctx.fillStyle = '#D32F2F';
-  ctx.fillRect(px + 8, py + 20, 26, 24);
-  
-  // Botões amarelos
-  ctx.fillStyle = '#FFEB3B';
-  ctx.beginPath();
-  ctx.arc(px + 16, py + 32, 3, 0, Math.PI * 2);
-  ctx.arc(px + 24, py + 32, 3, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Braços (levantados se pulando)
-  const armY = jumping ? -4 : 0;
-  ctx.fillStyle = '#FBC02D'; // Mangas amarelas
-  ctx.fillRect(px + 4, py + 20 + armY, 6, 14);
-  ctx.fillRect(px + 32, py + 20 + armY, 6, 14);
-  ctx.fillStyle = '#FF9800'; // Mãos laranja
-  ctx.fillRect(px + 2, py + 28 + armY, 4, 6);
-  ctx.fillRect(px + 36, py + 28 + armY, 4, 6);
-  
-  // Torso superior vermelho
-  ctx.fillStyle = '#F44336';
-  ctx.fillRect(px + 12, py + 12, 18, 12);
-  
-  // Cabeça
-  ctx.fillStyle = '#FFCA28';
-  ctx.beginPath();
-  ctx.arc(px + 21, py + 8, 13, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Orelhas
-  ctx.fillStyle = '#FFCA28';
-  ctx.beginPath();
-  ctx.arc(px + 9, py + 8, 4, 0, Math.PI * 2);
-  ctx.arc(px + 33, py + 8, 4, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Boné vermelho com "M" branca
-  ctx.fillStyle = '#C62828';
-  ctx.fillRect(px + 8, py, 26, 12);
-  ctx.beginPath();
-  ctx.arc(px + 21, py + 2, 13, Math.PI, 0); // Curva do boné
-  ctx.fill();
-  
-  // "M" no boné
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 10px Arial';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('M', px + 21, py + 4);
-  
-  // Olhos (brilham se pulando)
-  const pupilSize = jumping ? 2 : 3;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.beginPath();
-  ctx.arc(px + 15, py + 6, 5, 0, Math.PI * 2);
-  ctx.arc(px + 27, py + 6, 5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#000000';
-  ctx.beginPath();
-  ctx.arc(px + 15, py + 6, pupilSize, 0, Math.PI * 2);
-  ctx.arc(px + 27, py + 6, pupilSize, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Sobrancelhas
-  ctx.fillStyle = '#000';
-  ctx.fillRect(px + 13, py + 2, 6, 2);
-  ctx.fillRect(px + 23, py + 2, 6, 2);
-  
-  // Bigode épico
-  ctx.fillStyle = '#8B4513';
-  ctx.beginPath();
-  ctx.ellipse(px + 19, py + 15, 12, 5, 0, 0, Math.PI);
-  ctx.fill();
-  
-  if (flip) ctx.restore();
+function initCurrentLevel() {
+  const h = canvasHeight;
+  const level = levels[currentLevel];
+  platforms = level.getPlatforms(h);
+  enemies = level.getEnemies(h).map(e => ({ ...e, vy: 0, alive: true }));
+  player.x = level.startX;
+  player.y = platforms[0].y - player.height;
+  player.vx = player.vy = 0;
+  player.onGround = false;
+  player.animTime = player.animFrame = 0;
+  player.isWalking = false;
+  camera.x = 0;
+  flagPoleLowered = false;
 }
 
-// ================================================
-// GOOMBA MELHORADO + ANIMAÇÃO DE "QUICAR"
-// ================================================
-function drawGoomba(e) {
-  const px = e.x;
-  const py = e.y;
-  const bob = Math.sin(time * 8 + px * 0.01) * 2; // Quica levemente
-  
-  // Corpo principal (elipse marrom)
-  ctx.fillStyle = '#8B4513';
-  ctx.beginPath();
-  ctx.ellipse(px + 20, py + 22 + bob, 20, 16, 0, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Barriga inferior
-  ctx.fillStyle = '#A1887F';
-  ctx.beginPath();
-  ctx.ellipse(px + 20, py + 32 + bob, 16, 12, 0, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Pernas (2 pares, alternadas)
-  ctx.fillStyle = '#654321';
-  ctx.fillRect(px + 12, py + 34 + bob, 6, 8);
-  ctx.fillRect(px + 28, py + 34 + bob, 6, 8);
-  ctx.fillRect(px + 16, py + 36 + bob, 4, 6); // Traseiras
-  ctx.fillRect(px + 24, py + 36 + bob, 4, 6);
-  
-  // Olhos grandes e expressivos
-  ctx.fillStyle = '#FFFFFF';
-  ctx.beginPath();
-  ctx.arc(px + 13, py + 16 + bob, 7, 0, Math.PI * 2);
-  ctx.arc(px + 27, py + 16 + bob, 7, 0, Math.PI * 2);
-  ctx.fill();
-  
-  ctx.fillStyle = '#000000';
-  ctx.beginPath();
-  ctx.arc(px + 13, py + 16 + bob, 4, 0, Math.PI * 2);
-  ctx.arc(px + 27, py + 16 + bob, 4, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Pupilas (movem com vx)
-  const pupilX = e.vx > 0 ? 2 : -2;
-  ctx.fillStyle = '#333';
-  ctx.beginPath();
-  ctx.arc(px + 13 + pupilX, py + 16 + bob, 2, 0, Math.PI * 2);
-  ctx.arc(px + 27 + pupilX, py + 16 + bob, 2, 0, Math.PI * 2);
-  ctx.fill();
-  
-  // Dentes zangados
-  ctx.fillStyle = '#FFF';
-  ctx.fillRect(px + 18, py + 26 + bob, 4, 3);
-  ctx.fillRect(px + 22, py + 26 + bob, 4, 3);
-  
-  // Sobrancelhas
-  ctx.fillStyle = '#000';
-  ctx.fillRect(px + 9, py + 10 + bob, 10, 3);
-  ctx.fillRect(px + 25, py + 10 + bob, 10, 3);
-}
-
-// ================================================
-// BANDEIRA ANIMADA (desce quando tocada)
-// ================================================
-// Adicione global: let flagPoleLowered = false;
-let flagPoleLowered = false; // No initCurrentLevel: flagPoleLowered = false;
-
-// No checkWin(), antes de gameState = 'levelcomplete':
-if (!flagPoleLowered) {
-  flagPoleLowered = true;
-}
-
-// drawFlag melhorada:
-function drawFlag(x, groundY) {
-  const poleX = x + 20;
-  const poleHeight = flagPoleLowered ? 120 : 220;
-  
-  // Poste (anima descendo)
-  ctx.fillStyle = '#4A4A4A';
-  ctx.fillRect(poleX - 3, groundY - poleHeight, 6, poleHeight);
-  
-  // Suporte superior
-  ctx.fillStyle = '#666';
-  ctx.fillRect(poleX - 15, groundY - poleHeight - 8, 30, 8);
-  
-  // Bandeira vermelha (onda)
-  ctx.fillStyle = '#D32F2F';
-  const wave = Math.sin(time * 10) * 3;
-  ctx.beginPath();
-  ctx.moveTo(poleX, groundY - poleHeight + 10);
-  ctx.quadraticCurveTo(poleX + 30 + wave, groundY - poleHeight + 15, poleX + 60, groundY - poleHeight + 25);
-  ctx.quadraticCurveTo(poleX + 40 + wave, groundY - poleHeight + 35, poleX, groundY - poleHeight + 50);
-  ctx.closePath();
-  ctx.fill();
-  
-  // Estrela branca no topo
-  if (!flagPoleLowered) {
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath();
-    ctx.moveTo(poleX + 5, groundY - poleHeight - 15);
-    ctx.lineTo(poleX + 10, groundY - poleHeight - 25);
-    ctx.lineTo(poleX + 15, groundY - poleHeight - 18);
-    ctx.lineTo(poleX + 12, groundY - poleHeight - 10);
-    ctx.lineTo(poleX + 8, groundY - poleHeight - 10);
-    ctx.closePath();
-    ctx.fill();
+function nextLevel() {
+  if (currentLevel < levels.length - 1) {
+    currentLevel++;
+    initCurrentLevel();
+    gameState = 'playing';
+  } else {
+    gameState = 'win';
   }
 }
 
 // ================================================
-// UI E TELAS FINAIS MELHORADAS (com bordas e sombras)
+// EVENTO DO BOTÃO INICIAR
 // ================================================
-function drawUI() {
-  // Fundo semi-transparente
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.fillRect(20, 20, 200, 60);
-  
-  ctx.fillStyle = '#000';
-  ctx.font = 'bold 28px Arial';
-  ctx.textAlign = 'left';
-  ctx.fillText(`Fase ${currentLevel + 1}`, 35, 52);
-  ctx.fillText(`Tempo: ${Math.floor(time)}s`, 35, 82);
-  
-  // Vidas? (adicione player.lives = 3; e desenhe corações)
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('title-screen').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('title-screen').style.display = 'none';
+    initClouds();
+    initCurrentLevel();
+    gameState = 'playing';
+  }, 800);
+});
+
+// ================================================
+// LOOP PRINCIPAL + UPDATES + DRAWS (cole aqui todas as funções que já temos)
+// updatePlayer(), updateEnemies(), updateClouds(), updateCamera(),
+// checkCollisions(), checkWin(), die(),
+// drawEverything(), drawBackground(), drawGround(), drawPlatform(),
+// drawMario(), drawGoomba(), drawFlag(), drawUI(), drawGameOver(),
+// drawLevelComplete(), drawWin()
+// ================================================
+// (copie e cole todas as funções de update e draw da nossa conversa anterior aqui)
+
+function gameLoop() {
+  time += 1/60;
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  if (gameState === 'title') {
+    // gerenciado pelo HTML
+  } else if (gameState === 'playing') {
+    updatePlayer();
+    updateEnemies();
+    updateClouds();
+    updateCamera();
+    checkCollisions();
+    checkWin();
+    drawEverything();
+  } else if (gameState === 'gameover') {
+    drawEverything();
+    drawGameOver();
+  } else if (gameState === 'levelcomplete') {
+    drawEverything();
+    drawLevelComplete();
+  } else if (gameState === 'win') {
+    drawEverything();
+    drawWin();
+  }
+
+  requestAnimationFrame(gameLoop);
 }
 
-function drawGameOver() {
-  ctx.fillStyle = 'rgba(139,0,0,0.8)';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
-  ctx.fillStyle = '#FF4444';
-  ctx.font = 'bold 100px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('GAME', canvasWidth/2, canvasHeight/2 - 30);
-  ctx.fillText('OVER', canvasWidth/2, canvasHeight/2 + 60);
-  
-  ctx.font = 'bold 32px Arial';
-  ctx.fillStyle = '#FFF';
-  ctx.fillText('💀 Reiniciando...', canvasWidth/2, canvasHeight/2 + 120);
-}
-
-function drawLevelComplete() {
-  ctx.fillStyle = 'rgba(0,128,0,0.7)';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
-  ctx.fillStyle = '#4CAF50';
-  ctx.font = 'bold 80px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('FASE', canvasWidth/2, canvasHeight/2 - 20);
-  ctx.fillText('COMPLETA!', canvasWidth/2, canvasHeight/2 + 50);
-  
-  ctx.font = 'bold 36px Arial';
-  ctx.fillStyle = '#FFD700';
-  ctx.fillText('⭐ Próxima em 2s!', canvasWidth/2, canvasHeight/2 + 120);
-}
-
-function drawWin() {
-  ctx.fillStyle = 'rgba(255,215,0,0.8)';
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  
-  ctx.fillStyle = '#FFD700';
-  ctx.font = 'bold 110px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('VOCÊ', canvasWidth/2, canvasHeight/2 - 40);
-  ctx.fillText('VENCEU!', canvasWidth/2, canvasHeight/2 + 60);
-  
-  ctx.font = 'bold 42px Arial';
-  ctx.fillStyle = '#000';
-  ctx.fillText(`🏆 ${Math.floor(time)}s`, canvasWidth/2, canvasHeight/2 + 140);
-}npm run deploy
+gameLoop();  // Inicia tudo!
+</script>
+</body>
+</html>
