@@ -22,6 +22,7 @@ position:fixed;
 inset:0;
 pointer-events:none;
 z-index:-2;
+overflow:hidden;
 }
 
 .meteor{
@@ -34,19 +35,33 @@ box-shadow:
 0 0 12px #ff00ff,
 0 0 35px #a855f7,
 0 0 70px #7b2ff7;
+opacity:0;
 animation:fall linear infinite;
 }
 
-.meteor:nth-child(1){left:10%;animation-duration:6s;}
-.meteor:nth-child(2){left:30%;animation-duration:8s;}
-.meteor:nth-child(3){left:50%;animation-duration:7s;}
-.meteor:nth-child(4){left:70%;animation-duration:5s;}
-.meteor:nth-child(5){left:90%;animation-duration:9s;}
+.meteor:nth-child(1){left:5%;animation-duration:5s;}
+.meteor:nth-child(2){left:15%;animation-duration:7s;}
+.meteor:nth-child(3){left:25%;animation-duration:6s;}
+.meteor:nth-child(4){left:35%;animation-duration:8s;}
+.meteor:nth-child(5){left:45%;animation-duration:5s;}
+.meteor:nth-child(6){left:55%;animation-duration:9s;}
+.meteor:nth-child(7){left:65%;animation-duration:6s;}
+.meteor:nth-child(8){left:75%;animation-duration:7s;}
+.meteor:nth-child(9){left:85%;animation-duration:5s;}
+.meteor:nth-child(10){left:95%;animation-duration:8s;}
 
 @keyframes fall{
-0%{top:-10%;opacity:0;}
+0%{
+top:-10%;
+transform:translateX(0) rotate(35deg);
+opacity:0;
+}
 10%{opacity:1;}
-100%{top:120%;transform:translateX(-120px);opacity:0;}
+100%{
+top:120%;
+transform:translateX(-120px) rotate(35deg);
+opacity:0;
+}
 }
 
 /* BURACO NEGRO */
@@ -64,16 +79,17 @@ transform:translate(-50%,-50%);
 box-shadow:
 0 0 30px #7b2ff7,
 0 0 70px #3b0764,
-0 0 140px #7b2ff7;
+0 0 140px #7b2ff7,
+inset 0 0 40px #000;
 animation:pulsar 5s infinite ease-in-out;
 }
 
 @keyframes pulsar{
 0%,100%{transform:translate(-50%,-50%) scale(1);}
-50%{transform:translate(-50%,-50%) scale(1.2);}
+50%{transform:translate(-50%,-50%) scale(1.25);}
 }
 
-/* CARD INICIAL */
+/* CARD */
 
 .card{
 background:#000;
@@ -84,8 +100,64 @@ max-width:420px;
 margin:auto;
 margin-top:20vh;
 border:3px solid #a855f7;
-box-shadow:0 0 25px #a855f7;
+box-shadow:0 0 25px #a855f7, inset 0 0 15px #a855f7;
+position:relative;
 }
+
+/* LOGO COSMO RGB */
+
+.logo{
+font-size:3rem;
+color:white;
+-webkit-text-stroke:2px #a855f7;
+
+text-shadow:
+0 0 10px #ff00ff,
+0 0 20px #a855f7,
+0 0 40px #7b2ff7;
+
+animation:rgbGlow 5s linear infinite;
+}
+
+@keyframes rgbGlow{
+
+0%{
+text-shadow:
+0 0 10px red,
+0 0 20px magenta,
+0 0 40px purple;
+}
+
+33%{
+text-shadow:
+0 0 10px blue,
+0 0 20px cyan,
+0 0 40px purple;
+}
+
+66%{
+text-shadow:
+0 0 10px lime,
+0 0 20px green,
+0 0 40px cyan;
+}
+
+100%{
+text-shadow:
+0 0 10px red,
+0 0 20px magenta,
+0 0 40px purple;
+}
+
+}
+
+p{
+color:#d8b4fe;
+font-size:1.3rem;
+margin-bottom:30px;
+}
+
+/* BOTÃO */
 
 button{
 background:transparent;
@@ -95,12 +167,14 @@ padding:14px 40px;
 border-radius:50px;
 cursor:pointer;
 font-weight:bold;
+text-transform:uppercase;
 transition:.4s;
 box-shadow:0 0 15px #a855f7;
 }
 
 button:hover{
 background:#a855f7;
+box-shadow:0 0 40px #a855f7;
 color:black;
 transform:scale(1.08);
 }
@@ -117,7 +191,6 @@ margin:auto;
 .titulo{
 font-size:3rem;
 text-align:center;
-color:#fff;
 text-shadow:0 0 15px #a855f7;
 }
 
@@ -160,6 +233,11 @@ margin-right:auto;
 <div class="meteor"></div>
 <div class="meteor"></div>
 <div class="meteor"></div>
+<div class="meteor"></div>
+<div class="meteor"></div>
+<div class="meteor"></div>
+<div class="meteor"></div>
+<div class="meteor"></div>
 </div>
 
 <!-- PAGINA INICIAL -->
@@ -168,7 +246,7 @@ margin-right:auto;
 
 <div class="black-hole"></div>
 
-<h1>Cosmo</h1>
+<h1 class="logo">Cosmo</h1>
 
 <p>Bem-vindo ao centro da galáxia neon.</p>
 
@@ -177,7 +255,7 @@ margin-right:auto;
 </div>
 
 
-<!-- PAGINA DO COSMO -->
+<!-- PAGINA COSMO -->
 
 <div id="paginaCosmo">
 
@@ -187,17 +265,17 @@ margin-right:auto;
 
 <p>
 O cosmo é o conjunto de tudo que existe: galáxias, estrelas, planetas, poeira cósmica e energia.
-Existem bilhões de galáxias no universo, cada uma contendo bilhões de estrelas.
+Existem bilhões de galáxias no universo.
 </p>
 
 <p>
-Nossa galáxia se chama <b>Via Láctea</b>. No centro dela existe um gigantesco buraco negro chamado
-Sagittarius A*, que influencia a gravidade de toda a região.
+Nossa galáxia se chama <b>Via Láctea</b>. No centro dela existe um gigantesco buraco negro
+que influencia toda a gravidade ao redor.
 </p>
 
 <p>
-Astrônomos usam telescópios espaciais para observar galáxias distantes e entender
-como o universo surgiu e como ele evolui ao longo de bilhões de anos.
+Astrônomos utilizam telescópios espaciais para observar galáxias distantes e entender
+a origem do universo.
 </p>
 
 </div>
@@ -206,8 +284,8 @@ como o universo surgiu e como ele evolui ao longo de bilhões de anos.
 
 <img src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3">
 <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564">
-<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
 <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa">
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
 
 </div>
 
