@@ -30,13 +30,36 @@ body::before {
     height: 200%;
     background: transparent url('https://upload.wikimedia.org/wikipedia/commons/6/63/Starsinthesky.jpg') repeat;
     background-size: cover;
-    z-index: -1;
+    z-index: -3;
     animation: moveStars 200s linear infinite;
 }
 
 @keyframes moveStars {
     0% {transform: translate(0,0);}
     100% {transform: translate(-50%, -50%);}
+}
+
+/* Meteoros rosas */
+.meteor {
+    position: fixed;
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(45deg, #FF69B4, rgba(255,105,180,0));
+    top: -100px;
+    left: 0;
+    animation: meteorFall linear infinite;
+    z-index: -2;
+}
+
+@keyframes meteorFall {
+    0% {
+        transform: translate(0,0) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(120vw, 120vh) rotate(45deg);
+        opacity: 0;
+    }
 }
 
 /* Cabeçalho */
@@ -65,7 +88,7 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.85);
     display: flex;
     justify-content: center;
     z-index: 100;
@@ -73,7 +96,7 @@ nav {
 }
 
 nav a {
-    color: #BB88FF;
+    color: #FF69B4;
     margin: 0 15px;
     text-decoration: none;
     font-weight: bold;
@@ -103,12 +126,12 @@ article {
 article img {
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(128,0,128,0.7);
+    box-shadow: 0 0 20px rgba(255,105,180,0.7);
     margin-bottom: 20px;
 }
 
 h2 {
-    color: #DDA0DD;
+    color: #FF69B4;
     font-size: 2.5rem;
     margin-bottom: 15px;
     text-align: center;
@@ -147,6 +170,14 @@ article:hover {
 </head>
 <body>
 
+<!-- Meteoros -->
+<div class="meteor" style="left:10%; animation-duration: 3s; animation-delay:0s;"></div>
+<div class="meteor" style="left:20%; animation-duration: 4s; animation-delay:1s;"></div>
+<div class="meteor" style="left:35%; animation-duration: 5s; animation-delay:2s;"></div>
+<div class="meteor" style="left:50%; animation-duration: 3.5s; animation-delay:0.5s;"></div>
+<div class="meteor" style="left:65%; animation-duration: 4.5s; animation-delay:1.5s;"></div>
+<div class="meteor" style="left:80%; animation-duration: 5.5s; animation-delay:2.5s;"></div>
+
 <nav>
     <a href="#galaxias">Galáxias</a>
     <a href="#buracos-negros">Buracos Negros</a>
@@ -169,18 +200,18 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/2103/NGC1300_Hubble_960.jpg" alt="Galáxia Espiral NGC 1300">
         <h2>Galáxias</h2>
-        <p>Galáxias são enormes conjuntos de estrelas, gás, poeira e matéria escura ligados pela gravidade. Elas podem ter diferentes formatos: espirais, elípticas ou irregulares. A NGC 1300 é uma galáxia espiral com braços impressionantes e núcleo brilhante, mostrando a complexidade do cosmos.</p>
-        <p>Elas contêm bilhões de estrelas, sistemas planetários e nuvens de gás que dão origem a novas estrelas. Galáxias podem colidir, se fundir ou interagir gravitacionalmente, criando estruturas magníficas observadas pelos telescópios.</p>
+        <p>Galáxias são enormes conjuntos de estrelas, gás, poeira e matéria escura. Elas podem ter formas espirais, elípticas ou irregulares. A NGC 1300 é uma galáxia espiral com braços impressionantes e núcleo brilhante.</p>
+        <p>Galáxias contêm bilhões de estrelas e planetas. Colisões galácticas podem criar novas formas e estimular a formação de estrelas. Elas estruturam o universo em grande escala.</p>
     </article>
 </section>
 
 <!-- Seção 2: Buracos Negros -->
 <section id="buracos-negros">
     <article>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Black_Hole_Milky_Way.jpg" alt="Ilustração de um Buraco Negro">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Black_Hole_Milky_Way.jpg" alt="Buraco Negro">
         <h2>Buracos Negros</h2>
-        <p>Buracos negros são regiões do espaço com gravidade tão intensa que nada, nem a luz, consegue escapar. Eles se formam quando estrelas muito massivas colapsam ao final de suas vidas, concentrando toda a massa em um ponto extremamente denso chamado singularidade.</p>
-        <p>Buracos negros podem crescer absorvendo matéria ao seu redor, formando discos de acreção que emitem radiação intensa. Recentemente, imagens do buraco negro na galáxia M87 deram um grande avanço à astrofísica, mostrando visualmente o impossível de ser visto antes.</p>
+        <p>Buracos negros possuem gravidade tão intensa que nada escapa. Formam-se quando estrelas massivas colapsam. A singularidade concentra toda a massa em um ponto.</p>
+        <p>Discos de acreção emitem radiação intensa. Observações recentes mostram buracos negros ativos e ajudam a entender a evolução das galáxias.</p>
     </article>
 </section>
 
@@ -189,8 +220,8 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/2102/Betelgeuse_Hubble_960.jpg" alt="Estrela Betelgeuse">
         <h2>Estrelas</h2>
-        <p>Estrelas são enormes esferas de plasma que produzem energia através de fusão nuclear. O Sol é uma estrela comum, enquanto Betelgeuse é uma gigante vermelha prestes a explodir como supernova. As estrelas determinam a estrutura do universo, iluminando e aquecendo sistemas planetários.</p>
-        <p>Existem diferentes tipos de estrelas: anãs vermelhas, gigantes azuis, supergigantes e anãs brancas. Cada estrela tem ciclo de vida único, desde sua formação em nebulosas até seu destino final, seja como anã branca, estrela de nêutrons ou buraco negro.</p>
+        <p>Estrelas são enormes esferas de plasma produzindo energia via fusão nuclear. O Sol é uma estrela comum; Betelgeuse é uma gigante vermelha prestes a explodir.</p>
+        <p>Existem diferentes tipos: anãs vermelhas, gigantes azuis, supergigantes e anãs brancas. Cada estrela possui ciclo de vida distinto e influencia o espaço ao redor.</p>
     </article>
 </section>
 
@@ -199,7 +230,7 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/1901/Jupiter_NewHorizons_960.jpg" alt="Planeta Júpiter">
         <h2>Planetas</h2>
-        <p>Planetas são corpos celestes que orbitam estrelas, como a Terra ao redor do Sol. Eles podem ser rochosos, como Mercúrio, ou gasosos, como Júpiter. Júpiter é o maior planeta do Sistema Solar e possui a icônica Grande Mancha Vermelha, uma tempestade gigantesca.</p>
+        <p>Planetas são corpos que orbitam estrelas, como a Terra ao redor do Sol. Podem ser rochosos ou gasosos. Júpiter, o maior planeta do Sistema Solar, possui a icônica Grande Mancha Vermelha, uma tempestade gigante que dura séculos.</p>
         <p>Planetas podem ter luas, anéis e atmosferas complexas. Estudá-los ajuda a entender a formação de sistemas planetários e as condições que podem permitir vida fora da Terra.</p>
     </article>
 </section>
@@ -209,8 +240,8 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/2006/NGC6302_Hubble_960.jpg" alt="Nebulosa NGC 6302">
         <h2>Nebulosas</h2>
-        <p>Nebulosas são nuvens de gás e poeira no espaço, muitas vezes locais de nascimento de novas estrelas. A NGC 6302, conhecida como Nebulosa do Cremalheira, exibe cores e formas deslumbrantes, resultado da interação de ventos estelares e radiação intensa das estrelas centrais.</p>
-        <p>Nebulosas podem surgir após explosões de supernovas ou serem remanescentes de nuvens interestelares, criando regiões de intensa atividade cósmica e fenômenos visuais impressionantes.</p>
+        <p>Nebulosas são nuvens de gás e poeira, locais de nascimento de estrelas. A NGC 6302, chamada Nebulosa do Cremalheira, exibe cores e formas impressionantes, resultado de ventos estelares e radiação intensa.</p>
+        <p>Algumas nebulosas surgem após supernovas e outras são remanescentes de nuvens primordiais. Elas fornecem matéria para novas gerações de estrelas e planetas.</p>
     </article>
 </section>
 
@@ -219,8 +250,8 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/1910/SN2014J_HST_960.jpg" alt="Supernova SN 2014J">
         <h2>Supernovas</h2>
-        <p>Supernovas são explosões catastróficas de estrelas no final de suas vidas, liberando imensa energia e elementos químicos essenciais para a formação de planetas e vida. A SN 2014J, observada na galáxia M82, é um exemplo de supernova visível a telescópios amadores e profissionais.</p>
-        <p>Elas espalham elementos pesados como ferro, ouro e urânio pelo espaço, enriquecendo o meio interestelar e permitindo a formação de novos sistemas planetários. Supernovas também geram ondas de choque que influenciam a formação de estrelas em regiões próximas.</p>
+        <p>Supernovas são explosões de estrelas no final de suas vidas, liberando energia imensa e elementos químicos essenciais para a formação de planetas. SN 2014J é um exemplo visível na galáxia M82.</p>
+        <p>Elas espalham elementos pesados pelo espaço, enriquecendo o meio interestelar. Ondas de choque criadas por supernovas podem estimular a formação de novas estrelas em regiões próximas.</p>
     </article>
 </section>
 
@@ -229,8 +260,8 @@ article:hover {
     <article>
         <img src="https://apod.nasa.gov/apod/image/2108/CometNEOWISE_Zanotti_960.jpg" alt="Cometa NEOWISE">
         <h2>Cometas</h2>
-        <p>Cometas são corpos gelados que orbitam o Sol, compostos de gelo, poeira e rochas. Quando se aproximam do Sol, formam caudas luminosas de gás e poeira. O cometa NEOWISE foi visível a olho nu em 2020, encantando observadores em todo o mundo.</p>
-        <p>Os cometas são fósseis do início do Sistema Solar e ajudam os cientistas a entender a composição e evolução dos primeiros corpos planetários.</p>
+        <p>Cometas são corpos gelados que orbitam o Sol, compostos de gelo, poeira e rochas. Ao se aproximarem do Sol, formam caudas brilhantes de gás e poeira. O cometa NEOWISE encantou observadores em 2020.</p>
+        <p>Estudar cometas ajuda a entender a composição e evolução dos primeiros corpos do Sistema Solar, funcionando como cápsulas do tempo cósmicas.</p>
     </article>
 </section>
 
@@ -239,7 +270,7 @@ article:hover {
     <article>
         <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/Exoplanet_illustration.jpg" alt="Exoplaneta Ilustrativo">
         <h2>Exoplanetas</h2>
-        <p>Exoplanetas são planetas que orbitam estrelas fora do Sistema Solar. Já foram detectados milhares de exoplanetas, alguns com condições semelhantes à Terra, potencialmente habitáveis. Técnicas como trânsito e velocidade radial ajudam a descobrir suas massas, órbitas e atmosferas.</p>
+        <p>Exoplanetas orbitam estrelas fora do Sistema Solar. Milhares foram detectados, alguns semelhantes à Terra. Técnicas como trânsito e velocidade radial ajudam a descobrir suas órbitas, massas e atmosferas.</p>
         <p>Estudar exoplanetas é crucial para buscar sinais de vida extraterrestre e entender a diversidade de sistemas planetários no universo.</p>
     </article>
 </section>
@@ -249,8 +280,8 @@ article:hover {
     <article>
         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Cosmic_Rays.jpg" alt="Radiação Cósmica">
         <h2>Radiação Cósmica</h2>
-        <p>Radiação cósmica é composta por partículas energéticas vindas do espaço, incluindo prótons, elétrons e núcleos atômicos. Ela interage com a atmosfera terrestre, criando chuveiros de partículas secundárias detectáveis na Terra.</p>
-        <p>Essa radiação ajuda a estudar fenômenos de alta energia no universo, como explosões de supernovas e núcleos galácticos ativos.</p>
+        <p>Radiação cósmica é formada por partículas de alta energia vindas do espaço, incluindo prótons, elétrons e núcleos atômicos. Interage com a atmosfera terrestre, criando chuveiros de partículas secundárias.</p>
+        <p>Estuda-se a radiação cósmica para entender fenômenos de alta energia no universo, como supernovas e núcleos galácticos ativos.</p>
     </article>
 </section>
 
@@ -259,13 +290,15 @@ article:hover {
     <article>
         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/DarkMatterIllustration.jpg" alt="Ilustração de Matéria Escura">
         <h2>Matéria Escura</h2>
-        <p>Matéria escura é uma forma misteriosa de matéria que não emite luz nem radiação, mas exerce influência gravitacional. Ela representa cerca de 27% do universo e é essencial para explicar a rotação de galáxias e a estrutura em grande escala do cosmos.</p>
-        <p>Embora não seja detectável diretamente, os cientistas estudam seus efeitos sobre galáxias e lentes gravitacionais para entender sua natureza.</p>
+        <p>Matéria escura é uma forma misteriosa de matéria que não emite luz, mas exerce influência gravitacional. Representa cerca de 27% do universo e explica a rotação de galáxias e a estrutura em grande escala do cosmos.</p>
+        <p>Embora não detectável diretamente, cientistas estudam seus efeitos em galáxias e lentes gravitacionais para entender sua natureza.</p>
     </article>
 </section>
 
+<!-- Rodapé -->
 <footer>
-    Imagens via NASA, Wikimedia Commons e outras fontes públicas. Desenvolvido para fins educativos.
+    Imagens via NASA, Wikimedia Commons e outras fontes públicas. Desenvolvido para fins educativos. <br>
+    Meteoros animados criados com CSS puro.
 </footer>
 
 </body>
