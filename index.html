@@ -1,152 +1,260 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COSMO</title>
-    <style>
-        /* Estilos gerais */
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #000;
-            color: #E0D0FF;
-            line-height: 1.6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSMO</title>
+<style>
+    /* Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        a {
-            color: #BB88FF;
-            text-decoration: none;
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: black;
+        color: #E0D0FF;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        position: relative;
+    }
 
-        header {
-            text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(to right, #4B0082, #800080);
-        }
+    /* Fundo animado de estrelas */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+        background-size: 200px 200px;
+        animation: starMove 100s linear infinite;
+        z-index: -1;
+    }
 
-        header h1 {
-            font-size: 4rem;
-            margin: 0;
-            color: #FFFFFF;
-        }
+    @keyframes starMove {
+        from { transform: translate(0, 0); }
+        to { transform: translate(-100px, -100px); }
+    }
 
-        section {
-            padding: 50px 20px;
-            border-bottom: 1px solid #333;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
+    a {
+        color: #BB88FF;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
 
-        article {
-            max-width: 800px;
-            margin: 20px;
-        }
+    a:hover {
+        color: #FFAAFF;
+    }
 
-        article img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(128,0,128,0.7);
-        }
+    /* Header */
+    header {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #4B0082, #800080);
+        position: relative;
+        overflow: hidden;
+    }
 
-        h2 {
-            color: #DDA0DD;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
+    header h1 {
+        font-size: 5rem;
+        color: #FFFFFF;
+        text-shadow: 0 0 20px #BB88FF;
+        animation: glow 2s infinite alternate;
+    }
 
-        p {
-            font-size: 1.1rem;
-        }
+    @keyframes glow {
+        from { text-shadow: 0 0 20px #BB88FF; }
+        to { text-shadow: 0 0 40px #FFAAFF; }
+    }
 
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            background-color: #111;
-            color: #888;
-            font-size: 0.9rem;
-        }
+    /* Navegação rápida */
+    nav {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 10;
+    }
 
-        /* Layout responsivo */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 3rem;
-            }
+    nav a {
+        background: rgba(75,0,130,0.7);
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: background 0.3s, transform 0.3s;
+    }
 
-            section {
-                flex-direction: column;
-            }
+    nav a:hover {
+        background: rgba(138,43,226,0.8);
+        transform: scale(1.05);
+    }
 
-            article {
-                margin: 10px;
-            }
-        }
-    </style>
+    /* Seções */
+    section {
+        padding: 80px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        background: rgba(0,0,0,0.85);
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+
+    article {
+        max-width: 900px;
+        margin: 30px;
+        background: rgba(40,0,40,0.3);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(128,0,128,0.5);
+        transition: transform 0.5s, box-shadow 0.5s;
+    }
+
+    article:hover {
+        transform: translateY(-15px) rotateY(5deg);
+        box-shadow: 0 0 60px rgba(255,0,255,0.6);
+    }
+
+    article img {
+        width: 100%;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 30px rgba(128,0,128,0.6);
+        transition: transform 0.5s;
+    }
+
+    article img:hover {
+        transform: scale(1.07) rotate(1deg);
+    }
+
+    h2 {
+        color: #DDA0DD;
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+        text-align: center;
+        animation: fadeInText 1.5s ease-in-out;
+    }
+
+    p {
+        font-size: 1.2rem;
+        text-align: justify;
+        animation: fadeInText 2s ease-in-out;
+    }
+
+    @keyframes fadeInText {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 50px 20px;
+        background-color: #111;
+        color: #888;
+        font-size: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+        header h1 { font-size: 4rem; }
+        article { margin: 25px; }
+    }
+
+    @media (max-width: 768px) {
+        header h1 { font-size: 3.5rem; }
+        section { padding: 60px 10px; }
+        article { margin: 20px 0; }
+    }
+
+    @media (max-width: 480px) {
+        h2 { font-size: 2rem; }
+        p { font-size: 1rem; }
+    }
+
+</style>
 </head>
 <body>
-    <header>
-        <h1>COSMO</h1>
-    </header>
 
-    <!-- Seção 1: Galáxias -->
-    <section>
-        <article>
-            <img src="https://apod.nasa.gov/apod/image/2103/NGC1300_Hubble_960.jpg" alt="Galáxia Espiral NGC 1300">
-            <h2>Galáxias</h2>
-            <p>Galáxias são enormes conjuntos de estrelas, gás, poeira e matéria escura ligados pela gravidade. A NGC 1300 é uma galáxia espiral com braços impressionantes que giram em torno de um núcleo brilhante, mostrando a complexidade do cosmos.</p>
-        </article>
-    </section>
+<nav>
+    <a href="#galaxias">Galáxias</a>
+    <a href="#buracos">Buracos Negros</a>
+    <a href="#estrelas">Estrelas</a>
+    <a href="#planetas">Planetas</a>
+    <a href="#nebulosas">Nebulosas</a>
+    <a href="#supernovas">Supernovas</a>
+</nav>
 
-    <!-- Seção 2: Buracos Negros -->
-    <section>
-        <article>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Black_Hole_Milky_Way.jpg" alt="Ilustração de um Buraco Negro">
-            <h2>Buracos Negros</h2>
-            <p>Buracos negros são regiões do espaço com gravidade tão intensa que nada, nem mesmo a luz, consegue escapar. Eles se formam quando estrelas massivas colapsam ao final de suas vidas, criando um dos objetos mais misteriosos do universo.</p>
-        </article>
-    </section>
+<header>
+    <h1>COSMO</h1>
+</header>
 
-    <!-- Seção 3: Estrelas -->
-    <section>
-        <article>
-            <img src="https://apod.nasa.gov/apod/image/2102/Betelgeuse_Hubble_960.jpg" alt="Estrela Betelgeuse">
-            <h2>Estrelas</h2>
-            <p>Estrelas são enormes esferas de plasma que produzem luz e calor através de fusão nuclear. Betelgeuse, uma gigante vermelha, está próxima do fim de sua vida, e seu brilho avermelhado é visível mesmo a olho nu no céu noturno.</p>
-        </article>
-    </section>
+<!-- Seção 1: Galáxias -->
+<section id="galaxias">
+    <article>
+        <img src="https://apod.nasa.gov/apod/image/2103/NGC1300_Hubble_960.jpg" alt="Galáxia Espiral NGC 1300">
+        <h2>Galáxias</h2>
+        <p>Galáxias são enormes conjuntos de estrelas, gás, poeira e matéria escura ligados pela gravidade. A NGC 1300 é uma galáxia espiral com braços impressionantes que giram em torno de um núcleo brilhante, mostrando a complexidade do cosmos.</p>
+    </article>
+</section>
 
-    <!-- Seção 4: Planetas -->
-    <section>
-        <article>
-            <img src="https://apod.nasa.gov/apod/image/1901/Jupiter_NewHorizons_960.jpg" alt="Planeta Júpiter">
-            <h2>Planetas</h2>
-            <p>Planetas são corpos celestes que orbitam estrelas. Júpiter, o maior planeta do nosso Sistema Solar, possui uma atmosfera turbulenta e icônica Grande Mancha Vermelha, uma tempestade gigantesca que dura séculos.</p>
-        </article>
-    </section>
+<!-- Seção 2: Buracos Negros -->
+<section id="buracos">
+    <article>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Black_Hole_Milky_Way.jpg" alt="Ilustração de um Buraco Negro">
+        <h2>Buracos Negros</h2>
+        <p>Buracos negros são regiões do espaço com gravidade tão intensa que nada, nem mesmo a luz, consegue escapar. Eles se formam quando estrelas massivas colapsam ao final de suas vidas, criando um dos objetos mais misteriosos do universo.</p>
+    </article>
+</section>
 
-    <!-- Seção 5: Nebulosas -->
-    <section>
-        <article>
-            <img src="https://apod.nasa.gov/apod/image/2006/NGC6302_Hubble_960.jpg" alt="Nebulosa NGC 6302">
-            <h2>Nebulosas</h2>
-            <p>Nebulosas são nuvens de gás e poeira no espaço, muitas vezes locais de nascimento de novas estrelas. A NGC 6302, também chamada de Nebulosa do Cremalheira, exibe cores e formas deslumbrantes que encantam astrônomos e entusiastas.</p>
-        </article>
-    </section>
+<!-- Seção 3: Estrelas -->
+<section id="estrelas">
+    <article>
+        <img src="https://apod.nasa.gov/apod/image/2102/Betelgeuse_Hubble_960.jpg" alt="Estrela Betelgeuse">
+        <h2>Estrelas</h2>
+        <p>Estrelas são enormes esferas de plasma que produzem luz e calor através de fusão nuclear. Betelgeuse, uma gigante vermelha, está próxima do fim de sua vida, e seu brilho avermelhado é visível mesmo a olho nu no céu noturno.</p>
+    </article>
+</section>
 
-    <!-- Seção 6: Supernovas -->
-    <section>
-        <article>
-            <img src="https://apod.nasa.gov/apod/image/1910/SN2014J_HST_960.jpg" alt="Supernova SN 2014J">
-            <h2>Supernovas</h2>
-            <p>Supernovas são explosões de estrelas no final de suas vidas, liberando energia imensa e elementos químicos essenciais para a vida. A SN 2014J, observada na galáxia M82, é um exemplo de como o cosmos continua evoluindo e se renovando.</p>
-        </article>
-    </section>
+<!-- Seção 4: Planetas -->
+<section id="planetas">
+    <article>
+        <img src="https://apod.nasa.gov/apod/image/1901/Jupiter_NewHorizons_960.jpg" alt="Planeta Júpiter">
+        <h2>Planetas</h2>
+        <p>Planetas são corpos celestes que orbitam estrelas. Júpiter, o maior planeta do nosso Sistema Solar, possui uma atmosfera turbulenta e icônica Grande Mancha Vermelha, uma tempestade gigantesca que dura séculos.</p>
+    </article>
+</section>
 
-    <footer>
-        Imagens via NASA e outras fontes públicas
-    </footer>
+<!-- Seção 5: Nebulosas -->
+<section id="nebulosas">
+    <article>
+        <img src="https://apod.nasa.gov/apod/image/2006/NGC6302_Hubble_960.jpg" alt="Nebulosa NGC 6302">
+        <h2>Nebulosas</h2>
+        <p>Nebulosas são nuvens de gás e poeira no espaço, muitas vezes locais de nascimento de novas estrelas. A NGC 6302, também chamada de Nebulosa do Cremalheira, exibe cores e formas deslumbrantes que encantam astrônomos e entusiastas.</p>
+    </article>
+</section>
+
+<!-- Seção 6: Supernovas -->
+<section id="supernovas">
+    <article>
+        <img src="https://apod.nasa.gov/apod/image/1910/SN2014J_HST_960.jpg" alt="Supernova SN 2014J">
+        <h2>Supernovas</h2>
+        <p>Supernovas são explosões de estrelas no final de suas vidas, liberando energia imensa e elementos químicos essenciais para a vida. A SN 2014J, observada na galáxia M82, é um exemplo de como o cosmos continua evoluindo e se renovando.</p>
+    </article>
+</section>
+
+<footer>
+    Imagens via NASA e outras fontes públicas
+</footer>
+
 </body>
 </html>
