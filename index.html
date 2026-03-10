@@ -11,7 +11,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #111;
@@ -21,7 +20,6 @@
             position: relative;
             padding-bottom: 100px; /* Espaço extra para o footer */
         }
-
         /* Fundo animado de estrelas */
         body::before {
             content: "";
@@ -35,23 +33,19 @@
             animation: starMove 120s linear infinite;
             z-index: -1;
         }
-
         @keyframes starMove {
             from { transform: translate(0, 0); }
             to { transform: translate(-100px, -100px); }
         }
-
         a {
             color: #BB88FF;
             text-decoration: none;
             transition: color 0.3s, transform 0.3s;
         }
-
         a:hover {
             color: #FFAAFF;
             transform: scale(1.05);
         }
-
         /* Header */
         header {
             text-align: center;
@@ -61,19 +55,16 @@
             overflow: hidden;
             border-bottom: 5px solid #BB88FF;
         }
-
         header h1 {
             font-size: 6rem;
             color: #FFFFFF;
             text-shadow: 0 0 30px #BB88FF, 0 0 80px #FFAAFF;
             animation: glow 2s infinite alternate;
         }
-
         @keyframes glow {
             from { text-shadow: 0 0 30px #BB88FF, 0 0 60px #FFAAFF; }
             to { text-shadow: 0 0 80px #BB88FF, 0 0 120px #FFAAFF; }
         }
-
         /* Navegação rápida */
         nav {
             position: fixed;
@@ -84,7 +75,6 @@
             gap: 12px;
             z-index: 10;
         }
-
         nav a {
             background: rgba(75,0,130,0.7);
             padding: 15px 20px;
@@ -94,13 +84,11 @@
             transition: background 0.3s, transform 0.3s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
-
         nav a:hover {
             background: rgba(138,43,226,0.8);
             transform: scale(1.1);
             box-shadow: 0 8px 10px rgba(0, 0, 0, 0.5);
         }
-
         /* Seções */
         section {
             padding: 100px 20px;
@@ -111,7 +99,6 @@
             align-items: flex-start;
             background: rgba(0,0,0,0.85);
         }
-
         article {
             max-width: 900px;
             margin: 30px;
@@ -121,12 +108,10 @@
             box-shadow: 0 0 30px rgba(128,0,128,0.5);
             transition: transform 0.5s, box-shadow 0.5s;
         }
-
         article:hover {
             transform: translateY(-15px) rotateY(5deg);
             box-shadow: 0 0 60px rgba(255,0,255,0.8);
         }
-
         article img {
             width: 100%;
             border-radius: 15px;
@@ -134,11 +119,9 @@
             box-shadow: 0 0 30px rgba(128,0,128,0.7);
             transition: transform 0.5s;
         }
-
         article img:hover {
             transform: scale(1.07) rotate(2deg);
         }
-
         h2 {
             color: #DDA0DD;
             font-size: 3rem;
@@ -146,18 +129,15 @@
             text-align: center;
             animation: fadeInText 1.5s ease-in-out;
         }
-
         p {
             font-size: 1.3rem;
             text-align: justify;
             animation: fadeInText 2s ease-in-out;
         }
-
         @keyframes fadeInText {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         /* Footer */
         footer {
             text-align: center;
@@ -167,12 +147,10 @@
             font-size: 1.2rem;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-
         /* Cursor roxo neon */
         * {
             cursor: none;
         }
-
         .cursor-neon {
             position: fixed;
             width: 18px;
@@ -187,28 +165,125 @@
             pointer-events: none;
             z-index: 9999;
         }
-
         /* Responsividade */
         @media (max-width: 1024px) {
             header h1 { font-size: 4.5rem; }
             article { margin: 20px; }
         }
-
         @media (max-width: 768px) {
             header h1 { font-size: 3.5rem; }
             section { padding: 60px 10px; }
             article { margin: 20px 0; }
         }
-
         @media (max-width: 480px) {
             header h1 { font-size: 3rem; }
             h2 { font-size: 2rem; }
             p { font-size: 1rem; }
         }
+
+        /* === ADIÇÕES PARA ESTRELAS ROXAS, METEOROS E FOGUETE === */
+        /* Estrelas roxas piscando extras */
+        .stars-purple {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .stars-purple::before,
+        .stars-purple::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            box-shadow: 
+                120px 180px 2px #DDA0DD,
+                340px 90px 1px #BB88FF,
+                580px 420px 2px #FFAAFF,
+                720px 150px 3px #C71585,
+                950px 380px 1px #9370DB,
+                1100px 550px 2px #BA55D3,
+                80px 650px 1px #EE82EE,
+                260px 780px 2px #FF69B4,
+                1300px 120px 2px #DDA0DD,
+                1450px 400px 1px #BB88FF,
+                300px 200px 3px #D8BFD8,
+                900px 700px 2px #DA70D6;
+            opacity: 0.6;
+            animation: twinkle 6s infinite alternate;
+        }
+
+        .stars-purple::after {
+            animation-delay: 3s;
+            transform: scale(1.05);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Meteoros roxos */
+        .meteor {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #FFAAFF;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 15px #FF69B4,
+                0 0 35px #C71585,
+                0 0 60px #800080;
+            pointer-events: none;
+            z-index: -1;
+            animation: meteor-fall linear infinite;
+        }
+
+        @keyframes meteor-fall {
+            0% {
+                transform: translate(-50px, -100vh) rotate(40deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(120vw, 120vh) rotate(40deg);
+                opacity: 0;
+            }
+        }
+
+        /* Foguete roxo */
+        .rocket {
+            position: fixed;
+            font-size: 55px;
+            transform: rotate(-25deg);
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            animation: rocket-fly 30s linear infinite;
+        }
+
+        .rocket::before {
+            content: "🚀";
+            filter: hue-rotate(210deg) saturate(2) brightness(1.2);
+        }
+
+        @keyframes rocket-fly {
+            0% {
+                left: -20%;
+                top: 15%;
+                opacity: 0;
+            }
+            4% { opacity: 1; }
+            28% { opacity: 1; }
+            32% { opacity: 0; }
+            100% {
+                left: 115%;
+                top: 55%;
+            }
+        }
+        /* === FIM DAS ADIÇÕES === */
     </style>
 </head>
 <body>
-
 <nav>
     <a href="#galaxias">Galáxias</a>
     <a href="#buracos">Buracos Negros</a>
@@ -217,10 +292,24 @@
     <a href="#nebulosas">Nebulosas</a>
     <a href="#supernovas">Supernovas</a>
 </nav>
-
 <header>
     <h1>COSMO</h1>
 </header>
+
+<!-- === ADIÇÕES NO BODY: ESTRELAS, METEOROS E FOGUETES === -->
+<div class="stars-purple"></div>
+
+<!-- Meteoros roxos -->
+<div class="meteor" style="left: 5%; animation-duration: 3.5s; animation-delay: 1s;"></div>
+<div class="meteor" style="left: 25%; animation-duration: 5s; animation-delay: 6s;"></div>
+<div class="meteor" style="left: 50%; animation-duration: 4s; animation-delay: 12s;"></div>
+<div class="meteor" style="left: 75%; animation-duration: 6s; animation-delay: 20s;"></div>
+<div class="meteor" style="left: 40%; animation-duration: 4.8s; animation-delay: 30s;"></div>
+
+<!-- Foguete roxo -->
+<div class="rocket" style="animation-delay: 5s;"></div>
+<div class="rocket" style="animation-delay: 35s; animation-duration: 28s; top: 35%;"></div>
+<!-- === FIM DAS ADIÇÕES === -->
 
 <!-- Seção 1: Galáxias -->
 <section id="galaxias">
@@ -231,7 +320,6 @@
         <a href="https://www.nasa.gov/mission_pages/hubble/main/index.html" target="_blank">Explore mais sobre Galáxias na NASA</a>
     </article>
 </section>
-
 <!-- Seção 2: Buracos Negros -->
 <section id="buracos">
     <article>
@@ -241,7 +329,6 @@
         <a href="https://www.nasa.gov/mission_pages/chandra/main/index.html" target="_blank">Explore mais sobre Buracos Negros na NASA</a>
     </article>
 </section>
-
 <!-- Seção 3: Estrelas -->
 <section id="estrelas">
     <article>
@@ -251,7 +338,6 @@
         <a href="https://www.nasa.gov/mission_pages/hubble/main/index.html" target="_blank">Explore mais sobre Estrelas na NASA</a>
     </article>
 </section>
-
 <!-- Seção 4: Planetas -->
 <section id="planetas">
     <article>
@@ -261,7 +347,6 @@
         <a href="https://solarsystem.nasa.gov/planets/jupiter/overview/" target="_blank">Explore mais sobre Júpiter na NASA</a>
     </article>
 </section>
-
 <!-- Seção 5: Nebulosas -->
 <section id="nebulosas">
     <article>
@@ -271,7 +356,6 @@
         <a href="https://www.nasa.gov/mission_pages/hubble/multimedia/index.html" target="_blank">Explore mais sobre Nebulosas na NASA</a>
     </article>
 </section>
-
 <!-- Seção 6: Supernovas -->
 <section id="supernovas">
     <article>
@@ -281,14 +365,11 @@
         <a href="https://www.nasa.gov/mission_pages/hubble/main/index.html" target="_blank">Explore mais sobre Supernovas na NASA</a>
     </article>
 </section>
-
 <footer>
     Imagens via NASA e outras fontes públicas
 </footer>
-
 <!-- Botão de controle da música -->
 <button id="music-control">Pause Música</button>
-
 <!-- Música de fundo invisível via YouTube -->
 <iframe id="bg-music" width="0" height="0"
         src="https://www.youtube.com/embed/feoHV5JUbuo?autoplay=1&loop=1&playlist=feoHV5JUbuo&controls=0&mute=0&rel=0&modestbranding=1"
@@ -296,12 +377,10 @@
         allow="autoplay"
         allowfullscreen>
 </iframe>
-
 <script>
     // Controle da música
     const musicControl = document.getElementById('music-control');
     let musicPlaying = true;
-
     musicControl.addEventListener('click', () => {
         const iframe = document.getElementById('bg-music');
         if (musicPlaying) {
@@ -315,23 +394,19 @@
         }
         musicPlaying = !musicPlaying;
     });
-
     // Adiciona API do YouTube para controlar o player
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/watch?v=MX-iaTDEyGI";
     document.body.appendChild(tag);
 </script>
-
 <!-- Cursor interativo -->
 <div class="cursor-neon" id="cursor"></div>
 <script>
     const cursor = document.getElementById("cursor");
-
     document.addEventListener("mousemove", e => {
         cursor.style.left = e.clientX + "px";
         cursor.style.top = e.clientY + "px";
     });
 </script>
-
 </body>
 </html>
